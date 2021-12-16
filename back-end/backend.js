@@ -15,7 +15,8 @@ const crypto = require('crypto')
 app.use(express.static('public'))
 
 const router = express.Router();
-var fs = require('fs')
+var fs = require('fs');
+const { normalize } = require('path');
 app.use(bodyParser.urlencoded({ extended: true }));
 const storage = multer.diskStorage({
 
@@ -69,4 +70,4 @@ app.post('/save-profile-picture', upload.single('profilePic'), (req, res,next) =
     res.end()
 })
 
-app.listen(4000, () => console.log('Server ready'))
+app.listen(9000, () => console.log('Server ready'))
