@@ -12,7 +12,7 @@ app.use(express.json());
 var cors = require('cors');
 app.use(cors());
 const crypto = require('crypto')
-app.use(express.static('images'))
+app.use(express.static('public'))
 
 const router = express.Router();
 var fs = require('fs')
@@ -48,13 +48,15 @@ app.get('/', (req, res) => {
   res.send('Hi!')
 })
 
-app.get('/:id',  (req, res) => {
-  console.log("The id is: "+ req.params.id)
-  res.send(true);
+app.get('/show-modal-text', (req, res) => {
+  console.log("came in show-modal-text url");
+  res.send({
+    data: "http://localhost:4000/images/456.png"
+  })
 })
 
 app.post('/save-profile-picture', upload.single('profilePic'), (req, res,next) => {
-  console.log(JSON.stringify(req.cookies))
+  // console.log(JSON.stringify(req.cookies))
     console.log("the file name with which the file was saved in save-profile-picture url is: ",req.body.name)
     var imageName =  renameProfilePicture(req);
     var profilePictureHTML = `<div>

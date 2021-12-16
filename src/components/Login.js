@@ -1,15 +1,19 @@
 import React, { useState } from 'react'
-import {Button, Form, Image, Modal} from 'react-bootstrap'
+import {Button, Image, Form, Modal} from 'react-bootstrap'
 import axios from 'axios';
 
 export default function Login(){
-    const [profilePic, setProfilePic] = useState([])
-    const [profilePicURL, setProfilePicURL] = useState("");
-    const [profilePictureShown, setProfilePictureShown] = useState(false)
     const [show, setShow] = useState(false);
-    const [profilePicText, setProfilePicText] = useState("");
 
     const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [profilePic, setProfilePic] = useState([])
+    const [profilePicURL, setProfilePicURL] = useState("");
+    // const [profilePictureShown, setProfilePictureShown] = useState(false)
+
+    // const [profilePicText, setProfilePicText] = useState("");
+    // const [modalText, setModalText] = useState("");
+    var modalPicture = <Image src = {profilePicURL}></Image>
 
     function setProfilePicture(e){
         e.preventDefault();
@@ -35,28 +39,34 @@ export default function Login(){
             data: formData
         }).then(response => {
             console.log("response from backend is: ",response.data.data)
-            setProfilePicURL(response.data.profilePictureData);
-            if(profilePicURL !== ""){
-                console.log("profile pic url is: ",profilePicURL)
-            }
             
         })
     }
 
-    function showProfilePicture(e){
-        e.preventDefault();
-        setShow(true);
-        console.log("show profile pic button clicked")
+    // function showProfilePicture(e){
+    //     e.preventDefault();
+    //     setShow(true);
+    //     console.log("show profile pic button clicked")
+    //     axios({
+    //         method: "GET",
+    //         url: profilePicURL,
+    //         data: ""
+    //     }).then(response => {
+    //         console.log("response from show profile pic is: ",response)
+    //         setProfilePicText(JSON.parse(response.data) )
+    //         console.log("profile pic text is: ",profilePicText)
+    //         setProfilePictureShown(true)
+    //         window.location.href = `http://localhost:4000/`
+    //     })
+    // }
+    function showModalProfilePicture(){
         axios({
-            method: "GET",
-            url: profilePicURL,
+            method: 'GET',
+            url: "http://localhost:4000/show-modal-text",
             data: ""
         }).then(response => {
-            console.log("response from show profile pic is: ",response)
-            setProfilePicText(JSON.parse(response.data) )
-            console.log("profile pic text is: ",profilePicText)
-            setProfilePictureShown(true)
-            window.location.href = `http://localhost:4000/`
+            console.log("response in show modal text is: ",response.data.data)
+            setProfilePicURL(response.data.data)
         })
     }
     return (
@@ -78,9 +88,25 @@ export default function Login(){
                 <br></br>
             </div>
 
-            
+            <>
+                <Button variant="primary" onClick={() => {handleShow(); showModalProfilePicture();} }>
+                    Launch demo modal
+                </Button>
+
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body className = "modalprofilePicture">{modalPicture}</Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
+            </>
             {/* <Image src= "https://media.geeksforgeeks.org/wp-content/uploads/20210425000233/test-300x297.png" roundedCircle/> */}
-            {profilePicURL}
+            <Image src = "http://localhost:4000/images/456.png"/>
+            
         </div>
     )
 }
