@@ -96,7 +96,7 @@ export default function Login(){
             </div>
 
             <>
-                <Button variant="primary" style={{display: "none"}} ref={modalReference} onClick={() => {handleShow(); showModalProfilePicture();} }>
+                <Button variant="primary"  ref={modalReference} onClick={() => {handleShow(); showModalProfilePicture();} }>
                     Launch demo modal
                 </Button>
 
