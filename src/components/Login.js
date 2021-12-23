@@ -9,6 +9,8 @@ export default function Login(){
     const handleShow = () => setShow(true);
     const [profilePic, setProfilePic] = useState([])
     const [profilePicURL, setProfilePicURL] = useState("");
+    const modalReference = React.createRef();
+
     // const [profilePictureShown, setProfilePictureShown] = useState(false)
 
     // const [profilePicText, setProfilePicText] = useState("");
@@ -35,7 +37,7 @@ export default function Login(){
             headers:{
                 'Content-Type': 'multipart/form-data'
             },
-            url: "http://localhost:4000/save-profile-picture",
+            url: "http://localhost:9000/save-profile-picture",
             data: formData
         }).then(response => {
             console.log("response from backend is: ",response.data.data)
@@ -56,19 +58,24 @@ export default function Login(){
     //         setProfilePicText(JSON.parse(response.data) )
     //         console.log("profile pic text is: ",profilePicText)
     //         setProfilePictureShown(true)
-    //         window.location.href = `http://localhost:4000/`
+    //         window.location.href = `http://localhost:9000/`
     //     })
     // }
     function showModalProfilePicture(){
         axios({
             method: 'GET',
-            url: "http://localhost:4000/show-modal-text",
+            url: "http://localhost:9000/show-modal-text",
             data: ""
         }).then(response => {
             console.log("response in show modal text is: ",response.data.data)
             setProfilePicURL(response.data.data)
         })
     }
+
+    function showModal(){
+        modalReference.current.click()
+    }
+    
     return (
         <div>
 
@@ -89,7 +96,7 @@ export default function Login(){
             </div>
 
             <>
-                <Button variant="primary" onClick={() => {handleShow(); showModalProfilePicture();} }>
+                <Button variant="primary" style={{display: "none"}} ref={modalReference} onClick={() => {handleShow(); showModalProfilePicture();} }>
                     Launch demo modal
                 </Button>
 
@@ -104,9 +111,10 @@ export default function Login(){
                     </Modal.Footer>
                 </Modal>
             </>
-            {/* <Image src= "https://media.geeksforgeeks.org/wp-content/uploads/20210425000233/test-300x297.png" roundedCircle/> */}
-            <Image src = "http://localhost:4000/images/456.png"/>
-            
+            <Image src = "http://localhost:9000/images/456.png"/>
+            <Button variant='primary' onClick={showModal}>
+                Click here to show modal
+            </Button>
         </div>
     )
 }
