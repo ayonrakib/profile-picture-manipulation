@@ -2,6 +2,7 @@ var http = require('http');
 const express = require('express');
 const cookieParser = require('cookie-parser')
 const app = express();
+
 app.use(cookieParser());
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose')
@@ -69,5 +70,71 @@ app.post('/save-profile-picture', upload.single('profilePic'), (req, res,next) =
     });
     res.end()
 })
+
+app.get('/add-user', async (req, res)=>{
+  const user = new User({
+    firstName: "Rakib",
+    lastName: "Ayon"
+  });
+  try {
+    const newUser = await user.save();
+    res.send(newUser)
+  } catch (error) {
+    console.log("error while adding user: ",error)
+  }
+  // res.send("arrived in add user url!")
+})
+
+app.post('/delete-user',findUserWithId, async (req,res) => {
+  console.log("user id at delete-user url is: ",req.body.id);
+  if((res.user === null) || (res.user === undefined)){
+    res.send({
+      data: false,
+      error: 1000,
+      errorMessage: "User could not be deleted!"
+    })
+  }
+  else{
+    deleteUser(res);
+  }
+  
+
+})
+
+async function findUserWithId(req, res, next){
+  try{
+    var user = await User.findOne({
+      _id:req.body.id
+    });
+    // console.log("user with the id in delete user middleware is: ",user.id)
+  }
+  catch(error){
+    console.error(error)
+  }
+  res.user = user;
+  console.log("user in the findUserWithId method is: ",res.user)
+  next();
+}
+
+async function deleteUser(res){
+  if(res.user === null){
+    res.send({
+      data: false,
+      error: {
+        errorCode: 1000,
+        errorMessage: "User could not be deleted!"
+      }
+    })
+  }
+try {
+  await res.user.remove();
+} catch (error) {
+  console.error(error)
+}
+  res.send({
+    data: true,
+    error: ""
+  })
+}
 
 app.listen(9000, () => console.log('Server ready'))
